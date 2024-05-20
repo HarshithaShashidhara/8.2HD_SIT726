@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Report</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS */
+        body {
+            background-color: #f8f9fa;
+            color: #343a40;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+        }
+
+        .checkbox-label {
+            font-weight: normal;
+        }
+
+        .btn-submit {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Expense Report</h2>
+        <form id="expenseReportForm" action="#" method="POST">
+            <div class="form-group">
+                <label for="reportType">Report Type:</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="reportType" id="summaryReport" value="summaryReport" checked>
+                    <label class="form-check-label" for="summaryReport">Summary Report</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="reportType" id="detailedReport" value="detailedReport">
+                    <label class="form-check-label" for="detailedReport">Detailed Report</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="reportType" id="customReport" value="customReport">
+                    <label class="form-check-label" for="customReport">Custom Report</label>
+                </div>
+                <div id="customReportParams" style="margin-left: 20px;">
+                    <label for="customParameters">Custom Parameters:</label>
+                    <input type="text" class="form-control" id="customParameters" name="customParameters">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="timePeriod">Time Period:</label>
+                <select class="form-control" id="timePeriod" name="timePeriod">
+                    <option value="lastMonth">Last Month</option>
+                    <option value="lastQuarter">Last Quarter</option>
+                    <option value="lastYear">Last Year</option>
+                    <option value="customRange">Custom Range</option>
+                </select>
+                <div id="customRangeDates" style="margin-top: 10px;">
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" class="form-control" id="startDate" name="startDate">
+                    <label for="endDate">End Date:</label>
+                    <input type="date" class="form-control" id="endDate" name="endDate">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="expenseCategories">Expense Categories:</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="allCategories" value="allCategories" checked>
+                    <label class="form-check-label checkbox-label" for="allCategories">All Categories</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="groceries" value="groceries">
+                    <label class="form-check-label checkbox-label" for="groceries">Groceries</label>
+                </div>
+                <!-- Add other expense categories as needed -->
+            </div>
+            <div class="form-group">
+                <label for="paymentMethods">Payment Methods:</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="allPaymentMethods" value="allPaymentMethods" checked>
+                    <label class="form-check-label checkbox-label" for="allPaymentMethods">All Payment Methods</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="cash" value="cash">
+                    <label class="form-check-label checkbox-label" for="cash">Cash</label>
+                </div>
+                <!-- Add other payment methods as needed -->
+            </div>
+            <div class="form-group">
+                <label for="additionalOptions">Additional Options:</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="includeReceiptImages" value="includeReceiptImages">
+                    <label class="form-check-label checkbox-label" for="includeReceiptImages">Include Receipt Images</label>
+                </div>
+                <!-- Add other additional options as needed -->
+            </div>
+            <div class="form-group">
+                <label for="outputFormat">Output Format:</label>
+                <select class="form-control" id="outputFormat" name="outputFormat">
+                    <option value="pdf">PDF</option>
+                    <option value="excel">Excel</option>
+                    <option value="csv">CSV</option>
+                    <option value="html">HTML</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="emailReport">Email Report:</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="sendEmailReport" value="sendEmailReport">
+                    <label class="form-check-label checkbox-label" for="sendEmailReport">Send Report via Email</label>
+                </div>
+                <input type="email" class="form-control" id="emailAddress" name="emailAddress" placeholder="Enter Email Address" style="margin-top: 10px;">
+            </div>
+            <button type="submit" class="btn btn-primary btn-submit">Generate Report</button>
+        </form>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#customReportParams').hide();
+            $('#customRangeDates').hide();
+            $('#expenseCategories input[type="checkbox"]').click(function(){
+                $('#allCategories').prop('checked', false);
+            });
+            $('#allCategories').click(function(){
+                $('#expenseCategories input[type="checkbox"]').prop('checked', false);
+            });
+            $('#paymentMethods input[type="checkbox"]').click(function(){
+                $('#allPaymentMethods').prop('checked', false);
+            });
+            $('#allPaymentMethods').click(function(){
+                $('#paymentMethods input[type="checkbox"]').prop('checked', false);
+            });
+            $('#reportType').change(function(){
+                if($(this).val() == 'customReport'){
+                    $('#customReportParams').show();
+                } else {
+                    $('#customReportParams').hide();
+                }
+            });
+
+
+            $('#timePeriod').change(function(){
+                if($(this).val() == 'customRange'){
+                    $('#customRangeDates').show();
+                } else {
+                    $('#customRangeDates').hide();
+                }
+            });
+
+             // Handle form submission
+             $('#expenseReportForm').submit(function(event) {
+                event.preventDefault(); // Prevent default form submission
+                
+                // Display alert message
+                alert('Report generated successfully!');
+                
+                // Refresh the page
+                location.reload();
+        });
+
+    });
+    </script>
+</body>
+</html>
